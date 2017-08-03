@@ -1,0 +1,111 @@
+<div style="width: 40%;float: left;margin: 5px;">
+Previous
+<canvas id="grid-prev" width="500" height="500" style="border:1px solid #000000;" align="center"></canvas>
+</div>
+<div style="width: 40%;float: left;margin: 5px;">
+Now
+<canvas id="grid-now" width="500" height="500" style="border:1px solid #000000;" align="center"></canvas>
+</div>
+
+<div align="center" style="padding: 10px;"><button onclick="scan();">Check Life</button></div>
+
+<script type="text/javascript">
+	
+
+
+function create_grid(rows){
+	var grid=[];
+	for(i=0;i<rows;i++){
+		grid[i]=[];
+	}
+	grid = fill_random_data(grid);
+	return grid;
+}
+
+
+
+function fill_random_data(grid){
+	for(i=0;i<grid.length;i++){
+		for(j=0;j<grid.length;j++){
+			random = Math.floor(Math.random() * 20)
+			cell_status = random%2;
+			grid[i][j] = cell_status
+		}
+	}
+	return grid;
+}
+
+
+
+original_grid = create_grid(10);
+mirror_grid = original_grid;
+drawGrid(original_grid,'grid-now');
+drawGrid(original_grid,'grid-prev');
+
+function scan(){
+	drawGrid(mirror_grid,'grid-prev');
+	for(i=1;i<original_grid.length-1;i++){
+		for(j=1;j<original_grid.length-1;j++){
+			neigbours = get_neigbours(original_grid,i,j)
+			if(neigbours >3 || neigbours <2 ){
+				mirror_grid[i][j] = 0;
+			}
+			else{
+				mirror_grid[i][j] = 1;
+			}
+
+		}
+	}
+	
+	original_grid = mirror_grid;
+	drawGrid(original_grid,'grid-now');
+
+
+}
+
+function get_neigbours(grid,i,j){
+
+ var count = 0;
+ count += grid[i-1][j-1]
+ count += grid[i][j-1]
+ count += grid[i+1][j-1]
+
+ count += grid[i-1][j]
+ count += grid[i+1][j]
+ 
+ count += grid[i-1][j+1]
+ count += grid[i][j+1]
+ count += grid[i+1][j+1]
+
+ return count;
+
+ 	
+
+}
+
+
+function drawGrid(grid,grid_id) {
+    var c = document.getElementById(grid_id);
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(50, 50, 500, 500);
+    for (var j = 1; j < 10; j++) { 
+        for (var k = 1; k < 10; k++) { 
+            if (grid[j][k] === 1) {
+                ctx.fillStyle = "#0a71af";
+                ctx.fillRect(j*50, k*50, 48, 48);
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+</script>
